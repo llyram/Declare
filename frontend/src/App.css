@@ -1,0 +1,87 @@
+.App {
+  background-image: radial-gradient(circle at 29% 55%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 4%,transparent 4%, transparent 44%,transparent 44%, transparent 100%),radial-gradient(circle at 85% 89%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 52%,transparent 52%, transparent 100%),radial-gradient(circle at 6% 90%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 53%,transparent 53%, transparent 64%,transparent 64%, transparent 100%),radial-gradient(circle at 35% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 6%,transparent 6%, transparent 98%,transparent 98%, transparent 100%),radial-gradient(circle at 56% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 16%,transparent 16%, transparent 23%,transparent 23%, transparent 100%),radial-gradient(circle at 42% 0%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 3%,transparent 3%, transparent 26%,transparent 26%, transparent 100%),radial-gradient(circle at 29% 28%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 75%,transparent 75%, transparent 100%),radial-gradient(circle at 77% 21%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 35%,transparent 35%, transparent 55%,transparent 55%, transparent 100%),radial-gradient(circle at 65% 91%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 46%,transparent 46%, transparent 76%,transparent 76%, transparent 100%),linear-gradient(45deg, rgb(83, 91, 235),rgb(76, 11, 174));
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 80vh;
+  border-radius: 10px;
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
+}
+
+.login .textfield{
+  margin: 10px;
+}
+
+.login h1{
+  font-size: 40px;
+  color: #212121;
+}
+
+#board, #playerCards {
+  display: block;
+  clear: both;
+  width:100%;
+  min-height: 240px;
+}
+
+.card {
+box-sizing: border-box;  
+width: 100px;
+height: 140px;
+margin:10px;
+float: left;  
+background-color: white;
+/* background-image: url('https://i.imgur.com/yKggR5N.png'); */
+background-image: url('./components/newbackground.png');
+/* background-size: cover; */
+background-position-x: 0px;
+background-position-y: center;
+background-repeat: none;
+background-position: middle center;  
+border: 1px #555555 solid;
+border-radius: 10px;
+  -webkit-box-shadow: 2px 2px 3px 0px #000000; 
+box-shadow: 2px 2px 3px 0px #000000; 
+}
+
+HR {
+  margin-top:12px;
+  display: block;
+  width:100%;
+}
+
+BUTTON {
+  cursor: pointer;
+  width:200px;
+  height:40px;
+  text-align:center;
+  margin:20px;
+  border-radius: 5px;
+  
+}
+
+.game{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.updates {
+  height: 400px;
+  width: 300px;
+  background-color: white;
+  margin: 20px;
+  overflow: auto;
+  border-radius: 5px;
+  border: 5px solid white;
+}
