@@ -57,6 +57,7 @@ class Deck {
 var decks = {}
 
 let card1, card2, card3, card4, card5;
+var current_turn = 0;
 
 function deal() {
     if (deck.length() < 7) {
@@ -104,12 +105,18 @@ io.on('connection', (socket) => {
         socket.join(room);
         socket.nickname = name;
         io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
-        io.in(room).emit('joined_room', `${name} joined room ${room}`);
+        io.in(room).emit('update', `${name} has joined room ${room}`);
         console.log(`${name} joind room ${room}`);
     });
 
-    socket.on('click', (msg) => {
-        socket.broadcast.emit('update', msg);
+    socket.on('leave_room', ({ name, room }) => {
+        socket.leave(room);
+        io.in(room).emit('update', `${name} has left room ${room}`);
+    })
+
+    socket.on('click', ({ name, room }) => {
+        socket.broadcast.emit('update', `${name} clicked the button`);
+        io.in(room).emit('open_card', decks[room].deal());
     });
 
     socket.on('start_game', (room) => {
@@ -121,8 +128,6 @@ io.on('connection', (socket) => {
         }
         io.in(room).emit('open_card', decks[room].deal());
 
-
-
         io.sockets.adapter.rooms.get(room).forEach(player => {
             card1 = decks[room].deal()
             card2 = decks[room].deal()
@@ -133,7 +138,20 @@ io.on('connection', (socket) => {
                 card1, card2, card3, card4, card5
             });
         });
-    })
+
+        console.log(Array.from(io.sockets.adapter.rooms.get(room))[0]);
+        io.to(Array.from(io.sockets.adapter.rooms.get(room))[current_turn]).emit('your_turn', null);
+
+
+
+
+    });
+
+    socket.on('turn_over', (room) => {
+        console.log("next turn");
+        current_turn = (current_turn + 1) % io.sockets.adapter.rooms.get(room).size;
+        io.to(Array.from(io.sockets.adapter.rooms.get(room))[current_turn]).emit('your_turn', null);
+    });
 
     socket.on('disconnect', (socket) => {
         console.log(`${socket.nickname} has disconnected`);

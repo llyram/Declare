@@ -3,29 +3,36 @@ import { Button } from '@material-ui/core';
 import Game from './Game';
 
 
-const GamePage = ({ socket, name, room }) => {
+const GamePage = ({ socket, name, room, setLoggedIn }) => {
 
     const [start, setStart] = useState(false);
     const [playerCount, setPlayerCount] = useState(0);
-    const [list, setlist] = useState([]);
+    const [updates, setUpdates] = useState([]);
 
     useState(() => {
         socket.current.on('player_count', (count) => {
             setPlayerCount(count);
         });
-        socket.current.on('joined_room', (update) => {
-            setlist([...list, update ]);
-            // console.log(update);
-        });
         socket.current.on('start_game', () => {
             setStart(true);
         })
-        
+
+    });
+
+    useEffect(() => {
+        socket.current.on('update', (msg) => {
+            setUpdates([...updates, msg ]);
+        })
     });
 
     const startGame = () => {
         // setStart(true);
         socket.current.emit('start_game', room);
+    };
+
+    const leaveRoom = () => {
+        socket.current.emit('leave_room', {name, room});
+        setLoggedIn(false);
     };
 
     return (
@@ -43,11 +50,14 @@ const GamePage = ({ socket, name, room }) => {
                             <h2>joined room <span style={{ color: 'blue' }} >{room}</span> </h2>
                             <h2>there are currently {playerCount} players in this room</h2>
                             <h1>Start the game?</h1>
-                            <Button color="primary" variant="contained" onClick={startGame}> start </Button>
+                            <div className="actions">
+                                <Button color="primary" variant="contained" onClick={startGame} className="abutton"> start </Button>
+                                <Button color="primary" variant="contained" onClick={leaveRoom} > Leave room </Button>
+                            </div>
                         </div>
                         <div className="updates">
                             <ul>
-                                {list.map((update) => (
+                                {updates.map((update) => (
                                     <li>{update}</li>
                                 ))}
                             </ul>

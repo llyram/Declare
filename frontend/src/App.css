@@ -35,23 +35,23 @@
 }
 
 .card {
-box-sizing: border-box;  
-width: 100px;
-height: 140px;
-margin:10px;
-float: left;  
-background-color: white;
-/* background-image: url('https://i.imgur.com/yKggR5N.png'); */
-background-image: url('./components/newbackground.png');
-/* background-size: cover; */
-background-position-x: 0px;
-background-position-y: center;
-background-repeat: none;
-background-position: middle center;  
-border: 1px #555555 solid;
-border-radius: 10px;
+  box-sizing: border-box;  
+  width: 100px;
+  height: 140px;
+  margin:10px;
+  float: left;  
+  background-color: white;
+  /* background-image: url('https://i.imgur.com/yKggR5N.png'); */
+  background-image: url('./components/newbackground.png');
+  /* background-size: cover; */
+  background-position-x: 0px;
+  background-position-y: center;
+  background-repeat: none;
+  background-position: middle center;  
+  border: 1px #555555 solid;
+  border-radius: 10px;
   -webkit-box-shadow: 2px 2px 3px 0px #000000; 
-box-shadow: 2px 2px 3px 0px #000000; 
+  box-shadow: 2px 2px 3px 0px #000000; 
 }
 
 HR {
@@ -84,4 +84,9 @@ BUTTON {
   overflow: auto;
   border-radius: 5px;
   border: 5px solid white;
+}
+
+.abutton {
+  margin: 5px;
+  padding: 20px;
 }

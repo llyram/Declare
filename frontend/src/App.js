@@ -38,6 +38,7 @@ const App = () => {
             room = {room}
             socket={socket}
             name={name}
+            setLoggedIn={setLoggedIn}
           /> :
           <Login_page
             socket={socket}

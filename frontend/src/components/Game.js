@@ -5,7 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 const Game = ({ socket, name, room }) => {
 
     const [updates, setUpdates] = useState([]);
-    const [counter, setCounter] = useState(0);
+    const [myTurn, setMyTurn] = useState(true);
 
 
     class Card {
@@ -53,29 +53,9 @@ const Game = ({ socket, name, room }) => {
     const playerCard4 = useRef();
     const playerCard5 = useRef();
 
+    const nextButton = useRef(null);
 
-    // function deal() {
-    //     if (deck.length() < 7) {
-    //         deck.reset();
-    //         deck.shuffle();
-    //     }
-    //     drawdeck = new Card(deck.deal());
-    //     opencard = new Card(deck.deal());
 
-    //     playerCard1 = new Card(deck.deal());
-    //     playerCard2 = new Card(deck.deal());
-    //     playerCard3 = new Card(deck.deal());
-    //     playerCard4 = new Card(deck.deal());
-    //     playerCard5 = new Card(deck.deal());
-
-    //     opencard.displayCard("opencard", true);
-    //     drawdeck.displayCard("deck", false);
-    //     playerCard1.displayCard("playerCard1", true);
-    //     playerCard2.displayCard("playerCard2", true);
-    //     playerCard3.displayCard("playerCard3", true);
-    //     playerCard4.displayCard("playerCard4", true);
-    //     playerCard5.displayCard("playerCard5", true);
-    // } //End of deal()
 
     useEffect(() => {
         // deal();
@@ -105,15 +85,20 @@ const Game = ({ socket, name, room }) => {
         })
     });
 
-    function nextStep(el) {
-        opencard.displayCard("opencard", true);
+    useEffect(() => {
+        socket.current.on('your_turn', () => {
+            // console.log(nextButton.current);
+            console.log('my turn');
+            setMyTurn(false);
+            // nextButton.current.disabled = false;
+        });
+    });
 
-        socket.current.emit('click', `${name} clicked the button`);
+    const nextStep = () => {
+        socket.current.emit('click', {name, room});
         setUpdates([...updates, `${name} clicked the button` ]);
-
-
-
-
+        socket.current.emit('turn_over', room);
+        setMyTurn(true);
     } //End of nextStep()
 
 
@@ -133,7 +118,7 @@ const Game = ({ socket, name, room }) => {
                     <div id="playerCard3" className="card"></div>
                     <div id="playerCard4" className="card"></div>
                     <div id="playerCard5" className="card"></div>
-                    <button>Next card</button>
+                    <Button ref={nextButton} disabled={myTurn} variant="contained" onClick={nextStep}>Next card</Button>
                 </div>
             </div>
             <div className="updates">
