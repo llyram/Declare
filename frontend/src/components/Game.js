@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+
+import ProfileCircle from './ProfileCircle';
 
 
-const Game = ({ socket, name, room }) => {
+const Game = ({ socket, name, room, serverId, setLoggedIn }) => {
 
     const [updates, setUpdates] = useState([]);
     const [myTurn, setMyTurn] = useState(true);
+    const [sendCard, setSendCard] = useState("");
+    const [players, setPlayers] = useState([]);
+    const [currentTurn, setCurrentTurn] = useState("");
 
 
     class Card {
@@ -20,18 +25,16 @@ const Game = ({ socket, name, room }) => {
 
             var suits = { 'Hearts': 0, 'Diamonds': 13, 'Clubs': 26, 'Spades': 39 }
             this.position = suits[this.suit] + this.value; //Position in a sorted deck
+            this.backgroundPosition = -100 * this.position + "px";
         } //End of Constructor
 
-        displayCard(placeHolder, flipped = true) {
+        displayCard(placeHolder) {
             this.placeHolder = document.getElementById(placeHolder);
-            // this.placeHolder.classList.add("card");
-            this.flipped = flipped;
-            if (flipped) {
-                this.placeHolder.style.backgroundPosition = -100 * this.position + "px";
-            } else {
-                this.placeHolder.style.backgroundPosition = "0px";
-            }
+            this.placeHolder.classList.add("card");
+            // this.flipped = flipped;
+            // this.placeHolder.style.backgroundPosition = -100 * this.position + "px";
         } // End of displayCard
+
 
         flip() {
             if (this.flipped) {
@@ -47,13 +50,10 @@ const Game = ({ socket, name, room }) => {
 
     // let opencard, playerCard1, playerCard2, playerCard3, playerCard4, playerCard5;
     const opencard = useRef();
-    const playerCard1 = useRef();
-    const playerCard2 = useRef();
-    const playerCard3 = useRef();
-    const playerCard4 = useRef();
-    const playerCard5 = useRef();
+    const playerCards = useRef([]);
 
     const nextButton = useRef(null);
+    const throwing = useRef(null);
 
 
 
@@ -62,72 +62,136 @@ const Game = ({ socket, name, room }) => {
         socket.current.on('open_card', (card) => {
             // opencard = card;
             opencard.current = new Card(card);
-            opencard.current.displayCard("opencard", true);
-        });
-        socket.current.on('player_cards', ({card1, card2, card3, card4, card5}) => {
-            playerCard1.current = new Card(card1);
-            playerCard2.current = new Card(card2);
-            playerCard3.current = new Card(card3);
-            playerCard4.current = new Card(card4);
-            playerCard5.current = new Card(card5);
+            document.getElementById('opencard').style.backgroundPosition = opencard.current.backgroundPosition;
+            opencard.current.displayCard("opencard");
 
-            playerCard1.current.displayCard("playerCard1", true);
-            playerCard2.current.displayCard("playerCard2", true);
-            playerCard3.current.displayCard("playerCard3", true);
-            playerCard4.current.displayCard("playerCard4", true);
-            playerCard5.current.displayCard("playerCard5", true);
+        });
+        socket.current.on('player_cards', (cards) => {
+            for (let i = 0; i < cards.length; i++) {
+                playerCards.current[i] = new Card(cards[i]);
+
+
+                // playerCard.current[i].displayCard("playerCard".concat((i+1).toString()), true);
+            }
         })
     });
 
     useEffect(() => {
         socket.current.on('update', (msg) => {
-            setUpdates([...updates, msg ]);
+            setUpdates([...updates, msg]);
         })
     });
 
     useEffect(() => {
-        socket.current.on('your_turn', () => {
-            // console.log(nextButton.current);
-            console.log('my turn');
-            setMyTurn(false);
-            // nextButton.current.disabled = false;
+        socket.current.on('your_turn', (player_name) => {
+            setCurrentTurn(player_name);
+            if (player_name === name) {
+                setMyTurn(false);
+            };
+
+        });
+    });
+
+    useEffect(() => {
+        socket.current.on('players', (playerNames) => {
+            setPlayers(playerNames);
+        });
+    });
+
+    useEffect(() => {
+        socket.current.on('end_game', () => {
+            socket.current.emit('leave_room', { name, room });
+            setLoggedIn(false);
         });
     });
 
     const nextStep = () => {
-        socket.current.emit('click', {name, room});
-        setUpdates([...updates, `${name} clicked the button` ]);
+        socket.current.emit('click', { name, room, sendCard });
+        setUpdates([...updates, `${name} threw ${sendCard}`]);
         socket.current.emit('turn_over', room);
         setMyTurn(true);
     } //End of nextStep()
+
+    const setThrowCard = (e) => {
+        if (e.target.parentElement.id === 'throw') {
+            setSendCard("");
+            document.getElementById('playercards').appendChild(e.target);
+
+        } else {
+            setSendCard(playerCards.current.[parseInt(e.target.id.substring(10)) - 1].card);
+            throwing.current.appendChild(e.target);
+        }
+
+
+
+    };
+
+    const endGame = () => {
+        socket.current.emit('end_game', room);
+    }
 
 
 
     return (
         <div className="game">
-            <div id="cards">
-                Board:<div id="board">
-                    <div id="deck" className="card"></div>
-                    <div id="opencard" className="card"></div>
-                </div>
-                <hr />
-                Player's card:
-                <div id="playerCards">
-                    <div id="playerCard1" className="card" draggable="true"></div>
-                    <div id="playerCard2" className="card"></div>
-                    <div id="playerCard3" className="card"></div>
-                    <div id="playerCard4" className="card"></div>
-                    <div id="playerCard5" className="card"></div>
-                    <Button ref={nextButton} disabled={myTurn} variant="contained" onClick={nextStep}>Next card</Button>
-                </div>
+            <div className="players">
+                {players.map((player) => (
+                    <ProfileCircle
+                        name={player}
+                        currentName={currentTurn} />
+                ))}
             </div>
-            <div className="updates">
-                <ul>
-                    {updates.map((update) => (
-                        <li>{update}</li>
-                    ))}
-                </ul>
+            <div className="gameclass">
+                <div id="cards">
+                    Board:
+                    <div id="board">
+                        <div className="buttons button">
+                            <div id="deck" className="card"></div>
+                            <Button variant="contained">pick</Button>
+                        </div>
+                        <div className="buttons button">
+                            <div id="opencard" className="card"></div>
+                            <Button variant="contained">pick</Button>
+                        </div>
+                        <div className="buttons button">
+                            <div className="throw" id='throw' ref={throwing}>
+                            </div>
+                            <Button variant="contained" onClick={nextStep}>throw</Button>
+                        </div>
 
+                    </div>
+                    <hr />
+                    Player's card:
+                    <div id="playerCards">
+                        <div id='playercards'>
+                            {playerCards.current.map((card, index) => (
+                                <div 
+                                    id={"playerCard".concat((index + 1).toString())} 
+                                    className="card" 
+                                    onClick={setThrowCard}
+                                    style={{backgroundPosition:card.backgroundPosition}}
+                                ></div>
+
+                            ))}
+                        </div>
+                        <div className="buttons">
+                            <div className="button">
+                                <Button ref={nextButton} disabled={myTurn} variant="contained" onClick={nextStep}>Next card</Button>
+                            </div>
+                            <div className="button">
+                                <Button variant="contained" onClick={endGame}>End game</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="updates">
+                    <ul>
+                        {updates.map((update, index) => (
+                            <li key={index}>{update}</li>
+                        ))}
+                    </ul>
+
+                </div>
             </div>
         </div>
     )

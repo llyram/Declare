@@ -55,35 +55,9 @@ class Deck {
 } //End of Deck Class
 
 var decks = {}
+var rooms = {}
 
 let card1, card2, card3, card4, card5;
-var current_turn = 0;
-
-function deal() {
-    if (deck.length() < 7) {
-        deck.reset();
-        deck.shuffle();
-    }
-    card1 = new Card(deck.deal());
-    card2 = new Card(deck.deal());
-    card3 = new Card(deck.deal());
-    card4 = new Card(deck.deal());
-    card5 = new Card(deck.deal());
-    playerCard1 = new Card(deck.deal());
-    playerCard2 = new Card(deck.deal());
-
-
-    card1.displayCard('card1', false);
-    card2.displayCard('card2', false);
-    card3.displayCard('card3', false);
-    card4.displayCard('card4', false);
-    card5.displayCard('card5', false);
-    playerCard1.displayCard("playerCard1", true);
-    playerCard2.displayCard("playerCard2", true);
-} //End of deal()
-
-
-// deal();
 
 PORT = 4000
 
@@ -104,6 +78,12 @@ io.on('connection', (socket) => {
     socket.on('join_room', ({ room, name }) => {
         socket.join(room);
         socket.nickname = name;
+        if (!rooms[room]) {
+            rooms[room] = {};
+            rooms[room].names = [];
+            // rooms[room].names = {name};
+        }
+        rooms[room].names = [ ...rooms[room].names, name ];
         io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
         io.in(room).emit('update', `${name} has joined room ${room}`);
         console.log(`${name} joind room ${room}`);
@@ -112,12 +92,14 @@ io.on('connection', (socket) => {
     socket.on('leave_room', ({ name, room }) => {
         socket.leave(room);
         io.in(room).emit('update', `${name} has left room ${room}`);
+        console.log(`${name} has left ${room}`);
     })
 
-    socket.on('click', ({ name, room }) => {
-        socket.broadcast.emit('update', `${name} clicked the button`);
-        io.in(room).emit('open_card', decks[room].deal());
+    socket.on('click', ({ name, room, sendCard }) => {
+        socket.broadcast.emit('update', `${name} threw ${sendCard}`);
+        io.in(room).emit('open_card', sendCard);
     });
+    let current_room;
 
     socket.on('start_game', (room) => {
         io.in(room).emit('start_game', null);
@@ -127,30 +109,35 @@ io.on('connection', (socket) => {
             decks[room].shuffle();
         }
         io.in(room).emit('open_card', decks[room].deal());
+        // let playerNames = [];
 
-        io.sockets.adapter.rooms.get(room).forEach(player => {
+        io.sockets.adapter.rooms.get(room).forEach((player) => {
+            console.log(io.sockets.sockets.get(player).nickname);
             card1 = decks[room].deal()
             card2 = decks[room].deal()
             card3 = decks[room].deal()
             card4 = decks[room].deal()
             card5 = decks[room].deal()
-            io.to(player).emit('player_cards', {
-                card1, card2, card3, card4, card5
-            });
+            io.to(player).emit('player_cards', [card1, card2, card3, card4, card5]);
         });
+        console.log(rooms[room].names);
+        io.in(room).emit('players', rooms[room].names);
+        current_room = Array.from(io.sockets.adapter.rooms.get(room));
+        rooms[room]._turn = 0;
+        io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[0]).nickname);
+    });
 
-        console.log(Array.from(io.sockets.adapter.rooms.get(room))[0]);
-        io.to(Array.from(io.sockets.adapter.rooms.get(room))[current_turn]).emit('your_turn', null);
-
-
-
-
+    socket.on('end_game', (room) => {
+        console.log("game ended");
+        io.in(room).emit('end_game');
+        delete rooms[room];
     });
 
     socket.on('turn_over', (room) => {
         console.log("next turn");
-        current_turn = (current_turn + 1) % io.sockets.adapter.rooms.get(room).size;
-        io.to(Array.from(io.sockets.adapter.rooms.get(room))[current_turn]).emit('your_turn', null);
+        rooms[room]._turn = (rooms[room]._turn + 1) % io.sockets.adapter.rooms.get(room).size;
+        current_room = Array.from(io.sockets.adapter.rooms.get(room));
+        io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[rooms[room]._turn]).nickname);
     });
 
     socket.on('disconnect', (socket) => {

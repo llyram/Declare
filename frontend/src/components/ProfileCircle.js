@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const ProfileCircle = () => {
-    return(
-        <div className="profilecircle">
+const ProfileCircle = ({ name, currentName }) => {
+    return (
+        <div className='profilecirclecontainer'>
+            {name === currentName ?
+                (<div className="profilecircle currentturn">{name.substring(0, 1).toUpperCase()}</div>  )
+                :
+                (<div className="profilecircle">{name.substring(0, 1).toUpperCase()}</div>)
+            }
 
         </div>
     )

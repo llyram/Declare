@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 
 
 const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
 
-    
-    
+
+
 
     const nameChangeHandler = (e) => {
         setName(e.target.value);
@@ -15,7 +15,7 @@ const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
     };
 
     const joinRoomHandler = () => {
-        socket.current.emit('join_room', {room, name});
+        socket.current.emit('join_room', { room, name });
         setLoggedIn(true);
     };
 
@@ -29,14 +29,16 @@ const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
                 variant='outlined'
                 label='Name'
             />
-            <TextField 
+            <TextField
                 value={room}
                 onChange={roomChangeHandler}
-                className='textfield' 
-                variant='outlined' 
-                label='room id' 
+                className='textfield'
+                variant='outlined'
+                label='room id'
             />
-            <Button color="primary" variant="contained" onClick={joinRoomHandler} >connect</Button>
+            <div className="button">
+                <Button color="primary" variant="contained" onClick={joinRoomHandler} >connect</Button>
+            </div>
 
         </div>
     )

@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import Game from './Game';
 
 
-const GamePage = ({ socket, name, room, setLoggedIn }) => {
+const GamePage = ({ socket, name, room, setLoggedIn, serverId }) => {
 
     const [start, setStart] = useState(false);
     const [playerCount, setPlayerCount] = useState(0);
@@ -21,7 +21,7 @@ const GamePage = ({ socket, name, room, setLoggedIn }) => {
 
     useEffect(() => {
         socket.current.on('update', (msg) => {
-            setUpdates([...updates, msg ]);
+            setUpdates([...updates, msg]);
         })
     });
 
@@ -31,7 +31,7 @@ const GamePage = ({ socket, name, room, setLoggedIn }) => {
     };
 
     const leaveRoom = () => {
-        socket.current.emit('leave_room', {name, room});
+        socket.current.emit('leave_room', { name, room });
         setLoggedIn(false);
     };
 
@@ -43,22 +43,28 @@ const GamePage = ({ socket, name, room, setLoggedIn }) => {
                     room={room}
                     socket={socket}
                     name={name}
+                    serverId={serverId}
+                    setLoggedIn={setLoggedIn}
                 /> :
                 (
-                    <div className="game">
+                    <div className="gameclass">
                         <div className="login">
                             <h2>joined room <span style={{ color: 'blue' }} >{room}</span> </h2>
                             <h2>there are currently {playerCount} players in this room</h2>
                             <h1>Start the game?</h1>
                             <div className="actions">
-                                <Button color="primary" variant="contained" onClick={startGame} className="abutton"> start </Button>
-                                <Button color="primary" variant="contained" onClick={leaveRoom} > Leave room </Button>
+                                <div className="button">
+                                    <Button color="primary" variant="contained" onClick={startGame} className="abutton"> start </Button>
+                                </div>
+                                <div className="button">
+                                    <Button color="primary" variant="contained" onClick={leaveRoom} > Leave room </Button>
+                                </div>
                             </div>
                         </div>
                         <div className="updates">
                             <ul>
-                                {updates.map((update) => (
-                                    <li>{update}</li>
+                                {updates.map((update, index) => (
+                                    <li key={index}>{update}</li>
                                 ))}
                             </ul>
 

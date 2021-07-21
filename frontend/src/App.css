@@ -12,8 +12,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 50vh;
-  width: 80vh;
+  /* height: 50vh; */
+  /* width: 80vh; */
+  padding: 40px;
   border-radius: 10px;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
 }
@@ -28,10 +29,32 @@
 }
 
 #board, #playerCards {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   clear: both;
-  width:100%;
+  /* width:100%; */
   min-height: 240px;
+}
+
+.throw {
+  height: 160px;
+  min-width: 120px;
+  color: white;
+  background-color: white;
+  border-radius: 10px;
+  border: 5px solid #282828;
+}
+
+.players {
+  /* width: 100%; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  /* background-color: white; */
+  /* position: absolute; */
+
 }
 
 .card {
@@ -70,7 +93,7 @@ BUTTON {
   
 }
 
-.game{
+.gameclass{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,4 +112,42 @@ BUTTON {
 .abutton {
   margin: 5px;
   padding: 20px;
+}
+
+.profilecircle {
+  border: 3px solid #282828;
+  background-color: #282a36;
+  color: white;
+  border-radius: 50%;
+  padding: 20px;
+  margin: 20px;
+  font-size: 50px;
+  font-weight: 800;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* box-shadow: 0px 0px 20px 5px green; */
+}
+
+.currentturn {
+  box-shadow: 0px 0px 20px 5 green;
+  border: 3px solid green;
+
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.button {
+  margin: 10px;
+}
+
+.actions {
+  display: flex;
 }

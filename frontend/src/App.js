@@ -3,8 +3,7 @@ import './App.css';
 import io from 'socket.io-client';
 
 // importing components
-import Login_page from './components/LoginPage';
-import Game from './components/Game';
+import LoginPage from './components/LoginPage';
 import GamePage from './components/GamePage';
 
 
@@ -17,7 +16,7 @@ const App = () => {
   const [room, setRoom] = useState("");
 
   const socket = useRef();
-  const server_id = useRef();
+  const serverId = useRef();
 
   useEffect(() => {
     socket.current = io(CONNECTION);
@@ -25,8 +24,7 @@ const App = () => {
 
   useEffect(() => {
     socket.current.on('server_id', (id) => {
-      server_id.current = id;
-      console.log(server_id.current);
+      serverId.current = id;
     });
   })
 
@@ -39,8 +37,9 @@ const App = () => {
             socket={socket}
             name={name}
             setLoggedIn={setLoggedIn}
+            serverId={serverId}
           /> :
-          <Login_page
+          <LoginPage
             socket={socket}
             setLoggedIn={setLoggedIn}
             name={name}
