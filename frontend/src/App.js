@@ -16,17 +16,10 @@ const App = () => {
   const [room, setRoom] = useState("");
 
   const socket = useRef();
-  const serverId = useRef();
 
   useEffect(() => {
-    socket.current = io(CONNECTION);
-  }, []);
-
-  useEffect(() => {
-    socket.current.on('server_id', (id) => {
-      serverId.current = id;
-    });
-  })
+    socket.current = io(CONNECTION,  { transports: ['websocket'] });
+  }, [socket]);
 
   return (
     <div className="App">
@@ -37,7 +30,6 @@ const App = () => {
             socket={socket}
             name={name}
             setLoggedIn={setLoggedIn}
-            serverId={serverId}
           /> :
           <LoginPage
             socket={socket}

@@ -2,11 +2,13 @@ const express = require("express");
 const app = express();
 const cors = require('cors');
 const server = require('http').createServer(app);
+const ws = require('ws');
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
-    }
+    },
+    wsEngine: ws.Server
 });
 
 class Deck {
@@ -54,11 +56,10 @@ class Deck {
 
 } //End of Deck Class
 
-var decks = {}
-var rooms = {}
+var sockets = {}
 
 let card1, card2, card3, card4, card5;
-
+const cardValues = { "Ace of Hearts": 1, "2 of Hearts": 2, "3 of Hearts": 3, "4 of Hearts": 4, "5 of Hearts": 5, "6 of Hearts": 6, "7 of Hearts": 7, "8 of Hearts": 8, "9 of Hearts": 9, "10 of Hearts": 10, "Jack of Hearts": 11, "Queen of Hearts": 12, "King of Hearts": 13, "Ace of Diamonds": 1, "2 of Diamonds": 2, "3 of Diamonds": 3, "4 of Diamonds": 4, "5 of Diamonds": 5, "6 of Diamonds": 6, "7 of Diamonds": 7, "8 of Diamonds": 8, "9 of Diamonds": 9, "10 of Diamonds": 10, "Jack of Diamonds": 11, "Queen of Diamonds": 12, "King of Diamonds": 13, "Ace of Clubs": 1, "2 of Clubs": 2, "3 of Clubs": 3, "4 of Clubs": 4, "5 of Clubs": 5, "6 of Clubs": 6, "7 of Clubs": 7, "8 of Clubs": 8, "9 of Clubs": 9, "10 of Clubs": 10, "Jack of Clubs": 11, "Queen of Clubs": 12, "King of Clubs": 13, "Ace of Spades": 1, "2 of Spades": 2, "3 of Spades": 3, "4 of Spades": 4, "5 of Spades": 5, "6 of Spades": 6, "7 of Spades": 7, "8 of Spades": 8, "9 of Spades": 9, "10 of Spades": 10, "Jack of Spades": 11, "Queen of Spades": 12, "King of Spades": 13 };
 PORT = 4000
 
 
@@ -78,12 +79,12 @@ io.on('connection', (socket) => {
     socket.on('join_room', ({ room, name }) => {
         socket.join(room);
         socket.nickname = name;
-        if (!rooms[room]) {
-            rooms[room] = {};
-            rooms[room].names = [];
-            // rooms[room].names = {name};
+        if (!sockets[room]) {
+            sockets[room] = {};
+            sockets[room].names = [];
+            // sockets[room].names = {name};
         }
-        rooms[room].names = [ ...rooms[room].names, name ];
+        sockets[room].names = [...sockets[room].names, name];
         io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
         io.in(room).emit('update', `${name} has joined room ${room}`);
         console.log(`${name} joind room ${room}`);
@@ -93,52 +94,93 @@ io.on('connection', (socket) => {
         socket.leave(room);
         io.in(room).emit('update', `${name} has left room ${room}`);
         console.log(`${name} has left ${room}`);
+    });
+
+    socket.on('update', ({ update, room }) => {
+        io.in(room).emit('update', update);
     })
 
-    socket.on('click', ({ name, room, sendCard }) => {
-        socket.broadcast.emit('update', `${name} threw ${sendCard}`);
-        io.in(room).emit('open_card', sendCard);
+    socket.on('click', ({ name, room, send }) => {
+        socket.broadcast.emit('update', `${name} threw ${send}`);
+        sockets[room].opencard = send;
+        io.in(room).emit('open_card', sockets[room].opencard);
     });
     let current_room;
 
     socket.on('start_game', (room) => {
         io.in(room).emit('start_game', null);
-        decks[room] = new Deck();
-        if (decks[room].length() < 7) {
-            decks[room].reset();
-            decks[room].shuffle();
+        sockets[room].deck = new Deck();
+        if (sockets[room].deck.length() < 7) {
+            sockets[room].deck.reset();
+            sockets[room].deck.shuffle();
         }
-        io.in(room).emit('open_card', decks[room].deal());
-        // let playerNames = [];
+        // sockets[room].handvalues = {}
+
+        sockets[room].opencard = sockets[room].deck.deal();
 
         io.sockets.adapter.rooms.get(room).forEach((player) => {
             console.log(io.sockets.sockets.get(player).nickname);
-            card1 = decks[room].deal()
-            card2 = decks[room].deal()
-            card3 = decks[room].deal()
-            card4 = decks[room].deal()
-            card5 = decks[room].deal()
-            io.to(player).emit('player_cards', [card1, card2, card3, card4, card5]);
+            card1 = sockets[room].deck.deal()
+            card2 = sockets[room].deck.deal()
+            card3 = sockets[room].deck.deal()
+            card4 = sockets[room].deck.deal()
+            card5 = sockets[room].deck.deal()
+            // sockets[room][io.sockets.sockets.get(player).nickname] = cardValues[card1] + cardValues[card2] + cardValues[card3] + cardValues[card4] + cardValues[card5];
+            let opencard = sockets[room].opencard
+            let cards = [card1, card2, card3, card4, card5]
+            let playerNames = sockets[room].names
+            io.to(player).emit('start_variables', { opencard, cards, playerNames });
         });
-        console.log(rooms[room].names);
-        io.in(room).emit('players', rooms[room].names);
+        // io.in(room).emit('players', sockets[room].names);
         current_room = Array.from(io.sockets.adapter.rooms.get(room));
-        rooms[room]._turn = 0;
+        sockets[room]._turn = 0;
         io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[0]).nickname);
     });
 
     socket.on('end_game', (room) => {
         console.log("game ended");
         io.in(room).emit('end_game');
-        delete rooms[room];
+        console.log(sockets[room]);
+        delete sockets[room];
     });
 
-    socket.on('turn_over', (room) => {
-        console.log("next turn");
-        rooms[room]._turn = (rooms[room]._turn + 1) % io.sockets.adapter.rooms.get(room).size;
+    socket.on('turn_over', ({ room, pickedOption }) => {
+        if (pickedOption === "deck") {
+            io.to(socket.id).emit('picked_card', sockets[room].deck.deal());
+        } else {
+            io.to(socket.id).emit('picked_card', sockets[room].opencard);
+        }
+        sockets[room]._turn = (sockets[room]._turn + 1) % io.sockets.adapter.rooms.get(room).size;
         current_room = Array.from(io.sockets.adapter.rooms.get(room));
-        io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[rooms[room]._turn]).nickname);
+        io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[sockets[room]._turn]).nickname);
     });
+
+    socket.on('hand_value', ({handValue, room}) => {
+        if(!sockets[room].handValues){
+            sockets[room].handValues = {}
+        }
+        sockets[room].handValues[socket.nickname] = handValue;
+        console.log(sockets[room]);
+    })
+
+    socket.on('declare', ({handValue, room}) => {
+        let caught = false;
+        for(const [name, value] of Object.entries(sockets[room].handValues)) {
+            if(name === socket.nickname){
+                continue
+            }
+            if(value <= handValue){
+                caught = true;
+            }
+        }
+        if (caught){
+            socket.to(room).emit('declare_result', `${socket.nickname} has declared and has been caught`);
+            io.to(socket.id).emit('declare_result', `your have declared and have been caught`);
+        }else{
+            socket.to(room).emit('declare_result', `${socket.nickname} has declared and has won this round`);
+            io.to(socket.id).emit('declare_result', `your have declared and have won this round`);
+        }
+    })
 
     socket.on('disconnect', (socket) => {
         console.log(`${socket.nickname} has disconnected`);

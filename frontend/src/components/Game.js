@@ -4,13 +4,16 @@ import { Button } from '@material-ui/core';
 import ProfileCircle from './ProfileCircle';
 
 
-const Game = ({ socket, name, room, serverId, setLoggedIn }) => {
+const Game = ({ socket, name, room, setLoggedIn }) => {
 
     const [updates, setUpdates] = useState([]);
-    const [myTurn, setMyTurn] = useState(true);
-    const [sendCard, setSendCard] = useState("");
+    const [myTurn, setMyTurn] = useState(false);
+    const [sendCard, setSendCard] = useState(-1);
     const [players, setPlayers] = useState([]);
     const [currentTurn, setCurrentTurn] = useState("");
+    const [pick, setPick] = useState(false);
+    const [pickOpen, setPickOpen] = useState(false);
+    const [pickedOpen, setPickedOpen] = useState(null);
 
 
     class Card {
@@ -28,103 +31,142 @@ const Game = ({ socket, name, room, serverId, setLoggedIn }) => {
             this.backgroundPosition = -100 * this.position + "px";
         } //End of Constructor
 
-        displayCard(placeHolder) {
-            this.placeHolder = document.getElementById(placeHolder);
-            this.placeHolder.classList.add("card");
-            // this.flipped = flipped;
-            // this.placeHolder.style.backgroundPosition = -100 * this.position + "px";
-        } // End of displayCard
-
-
-        flip() {
-            if (this.flipped) {
-                this.placeHolder.style.backgroundPosition = "0px";
-                this.flipped = false;
-            } else {
-                this.placeHolder.style.backgroundPosition = -150 * this.position + "px";
-                this.flipped = true;
-            }
-        } //End of flip()
-
     } //End of Card class
 
-    // let opencard, playerCard1, playerCard2, playerCard3, playerCard4, playerCard5;
-    const opencard = useRef();
-    const playerCards = useRef([]);
+    const [opencard, setOpencard] = useState();
+    const [playerCards, setPlayerCards] = useState([]);
+    const [throwCards, setThrowCards] = useState([]);
 
     const nextButton = useRef(null);
     const throwing = useRef(null);
 
 
-
     useEffect(() => {
-        // deal();
-        socket.current.on('open_card', (card) => {
-            // opencard = card;
-            opencard.current = new Card(card);
-            document.getElementById('opencard').style.backgroundPosition = opencard.current.backgroundPosition;
-            opencard.current.displayCard("opencard");
-
-        });
-        socket.current.on('player_cards', (cards) => {
+        // Starting values of opnecard, player cards and player names
+        socket.current.on('start_variables', ({ opencard, cards, playerNames }) => {
+            setOpencard(new Card(opencard));
+            let tempCards = [];
             for (let i = 0; i < cards.length; i++) {
-                playerCards.current[i] = new Card(cards[i]);
-
-
-                // playerCard.current[i].displayCard("playerCard".concat((i+1).toString()), true);
+                tempCards.push(new Card(cards[i]));
             }
+            setPlayerCards(tempCards);
+            setPlayers(playerNames);
         })
-    });
 
-    useEffect(() => {
+        // get opencard after every turn
+        socket.current.on('open_card', (card) => {
+            setOpencard(new Card(card));
+        });
+
+        // Updates after any move
         socket.current.on('update', (msg) => {
-            setUpdates([...updates, msg]);
+            setUpdates(updates => [...updates, msg]);
         })
-    });
 
-    useEffect(() => {
+        // change of turn
         socket.current.on('your_turn', (player_name) => {
             setCurrentTurn(player_name);
             if (player_name === name) {
-                setMyTurn(false);
+                setMyTurn(true);
             };
-
         });
-    });
 
-    useEffect(() => {
-        socket.current.on('players', (playerNames) => {
-            setPlayers(playerNames);
-        });
-    });
-
-    useEffect(() => {
+        // ending the game
         socket.current.on('end_game', () => {
             socket.current.emit('leave_room', { name, room });
             setLoggedIn(false);
         });
-    });
 
-    const nextStep = () => {
-        socket.current.emit('click', { name, room, sendCard });
-        setUpdates([...updates, `${name} threw ${sendCard}`]);
-        socket.current.emit('turn_over', room);
-        setMyTurn(true);
-    } //End of nextStep()
+        // getting the picked card
+        socket.current.on('picked_card', (card) => {
+            let newcard = new Card(card);
+            setPlayerCards(playerCards => [...playerCards, newcard])
+            setThrowCards([]);
+        })
+
+        // result of declaration
+        socket.current.on('declare_result', (result) => {
+            window.alert(result);
+            socket.current.emit('start_game', room);
+        })
+    }, [socket.current]);
+
+    useEffect(() => {
+        let handValue = getHandValue()
+        socket.current.emit('hand_value', { handValue, room });
+    }, [playerCards]);
+
+    const throwHandler = () => {
+        if (sendCard === -1) {
+            alert("choose a card to throw");
+        } else {
+            let update = `${name} threw ${throwCards[0].card}`
+            socket.current.emit('update', { update, room });
+            // setUpdates([...updates, `${name} threw ${sendCard}`]);
+            setPick(true);
+            for (let i = 0; i < playerCards.length; i++) {
+                if (playerCards[i].value == opencard.value) {
+                    setPickOpen(true);
+                }
+            }
+        }
+    } //End of throwHandler()
+
+    const pickHandler = (pickedOption) => {
+        setPick(false);
+        setMyTurn(false);
+        setPickOpen(false);
+        setPickedOpen(null);
+        let send = throwCards[0].card;
+
+        if (pickedOption === "opencard") {
+            setPickedOpen(opencard.value);
+        }
+
+        socket.current.emit('turn_over', { room, pickedOption });
+        socket.current.emit('click', { name, room, send });
+    }
+
+    const declareHandler = () => {
+        const handValue = getHandValue();
+        socket.current.emit('declare', { handValue, room });
+    }
+
+    const getHandValue = () => {
+        let handValue = 0;
+        for (let i = 0; i < playerCards.length; i++) {
+            handValue += playerCards[i].value;
+        }
+
+        return handValue
+    }
 
     const setThrowCard = (e) => {
         if (e.target.parentElement.id === 'throw') {
-            setSendCard("");
-            document.getElementById('playercards').appendChild(e.target);
+            // setSendCard(-1);
+            setSendCard(-1);
+            setPlayerCards([...playerCards, throwCards.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
 
         } else {
-            setSendCard(playerCards.current.[parseInt(e.target.id.substring(10)) - 1].card);
-            throwing.current.appendChild(e.target);
+            if (pickedOpen !== null) {
+                if (playerCards[(e.target.id.substring(10)) - 1].value !== pickedOpen) {
+                    window.alert("you can only throw the card that you have picked in the previous round");
+                    return null
+                }
+            }
+            if (throwCards.length === 0) {
+                setSendCard(parseInt(e.target.id.substring(10)) - 1);
+                setThrowCards([...throwCards, playerCards.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+            } else {
+                if (playerCards[parseInt((e.target.id.substring(10)) - 1)].value === throwCards[0].value) {
+                    setThrowCards([...throwCards, playerCards.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+                } else {
+                    window.alert("cards don't have the same value");
+                }
+            }
+
         }
-
-
-
-    };
+    }; // End of setThrowCard
 
     const endGame = () => {
         socket.current.emit('end_game', room);
@@ -147,16 +189,25 @@ const Game = ({ socket, name, room, serverId, setLoggedIn }) => {
                     <div id="board">
                         <div className="buttons button">
                             <div id="deck" className="card"></div>
-                            <Button variant="contained">pick</Button>
+                            <Button variant="contained" onClick={() => { pickHandler("deck") }} disabled={!(myTurn && pick)}>pick from deck</Button>
                         </div>
                         <div className="buttons button">
-                            <div id="opencard" className="card"></div>
-                            <Button variant="contained">pick</Button>
+                            {opencard ? <div id="opencard" className="card" style={{ backgroundPosition: opencard.backgroundPosition }}></div> : <div></div>}
+                            <Button variant="contained" onClick={() => { pickHandler("opencard") }} disabled={!(myTurn && pick && pickOpen)}>pick open card</Button>
                         </div>
                         <div className="buttons button">
                             <div className="throw" id='throw' ref={throwing}>
+                                {throwCards.map((card, index) => (
+                                    <div
+                                        id={"playerCard".concat((index + 1).toString())}
+                                        className="card"
+                                        onClick={setThrowCard}
+                                        style={{ backgroundPosition: card.backgroundPosition }}
+                                    ></div>
+
+                                ))}
                             </div>
-                            <Button variant="contained" onClick={nextStep}>throw</Button>
+                            <Button variant="contained" onClick={throwHandler} disabled={!(myTurn && !pick)}>throw</Button>
                         </div>
 
                     </div>
@@ -164,19 +215,19 @@ const Game = ({ socket, name, room, serverId, setLoggedIn }) => {
                     Player's card:
                     <div id="playerCards">
                         <div id='playercards'>
-                            {playerCards.current.map((card, index) => (
-                                <div 
-                                    id={"playerCard".concat((index + 1).toString())} 
-                                    className="card" 
+                            {playerCards.map((card, index) => (
+                                <div
+                                    id={"playerCard".concat((index + 1).toString())}
+                                    className="card"
                                     onClick={setThrowCard}
-                                    style={{backgroundPosition:card.backgroundPosition}}
+                                    style={{ backgroundPosition: card.backgroundPosition }}
                                 ></div>
 
                             ))}
                         </div>
                         <div className="buttons">
                             <div className="button">
-                                <Button ref={nextButton} disabled={myTurn} variant="contained" onClick={nextStep}>Next card</Button>
+                                <Button ref={nextButton} variant="contained" disabled={!(myTurn && !pick)} onClick={declareHandler} >Declare</Button>
                             </div>
                             <div className="button">
                                 <Button variant="contained" onClick={endGame}>End game</Button>

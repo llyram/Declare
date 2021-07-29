@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import Game from './Game';
 
 
-const GamePage = ({ socket, name, room, setLoggedIn, serverId }) => {
+const GamePage = ({ socket, name, room, setLoggedIn}) => {
 
     const [start, setStart] = useState(false);
     const [playerCount, setPlayerCount] = useState(0);
@@ -17,13 +17,13 @@ const GamePage = ({ socket, name, room, setLoggedIn, serverId }) => {
             setStart(true);
         })
 
-    });
+    },[socket]);
 
     useEffect(() => {
         socket.current.on('update', (msg) => {
-            setUpdates([...updates, msg]);
+            setUpdates(updates => [...updates, msg]);
         })
-    });
+    },[socket]);
 
     const startGame = () => {
         // setStart(true);
@@ -43,7 +43,6 @@ const GamePage = ({ socket, name, room, setLoggedIn, serverId }) => {
                     room={room}
                     socket={socket}
                     name={name}
-                    serverId={serverId}
                     setLoggedIn={setLoggedIn}
                 /> :
                 (
