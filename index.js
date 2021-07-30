@@ -66,6 +66,10 @@ PORT = 4000
 app.use(cors());
 app.use(express.json());
 
+if (process.env.NODE_ENV === 'production'){
+    app.use(express.static('frontend/build'))
+}
+
 
 server.listen(PORT, () => {
     console.log(`server started on Port ${PORT}`);
