@@ -7,7 +7,8 @@ import LoginPage from './components/LoginPage';
 import GamePage from './components/GamePage';
 
 
-const CONNECTION = 'localhost:4000';
+// const CONNECTION = 'localhost:4000';
+const CONNECTION = '/';
 
 const App = () => {
 
