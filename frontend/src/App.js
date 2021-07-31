@@ -8,7 +8,7 @@ import GamePage from './components/GamePage';
 
 
 // const CONNECTION = 'localhost:4000';
-const CONNECTION = 'ws://castelinos-card-game.herokuapp.com/socket.io/?EIO=4&transport=websocket';
+const CONNECTION = '/';
 
 const App = () => {
 
