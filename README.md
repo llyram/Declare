@@ -1,7 +1,7 @@
 # Castelino's Card Game
 A multiplayer card game created using SocketIO, ReactJS, NodeJS and express.
 
-![screenshot](https://imgur.com/ZdVkjLt.png)
+![screenshot](https://imgur.com/HGny4KH.png)
 
 ## Rules:
 1. Each player gets dealt 5 cards which only they can see
