@@ -14,6 +14,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     const [pick, setPick] = useState(false);
     const [pickOpen, setPickOpen] = useState(false);
     const [pickedOpen, setPickedOpen] = useState(null);
+    const [canDeclare, setCanDeclare] = useState(true);
 
 
     class Card {
@@ -66,6 +67,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
         // change of turn
         socket.current.on('your_turn', (player_name) => {
             setCurrentTurn(player_name);
+            setCanDeclare(true);
             if (player_name === name) {
                 setMyTurn(true);
             };
@@ -73,7 +75,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
 
         // ending the game
         socket.current.on('end_game', () => {
-            socket.current.emit('leave_room', { name, room });
+            // socket.current.emit('leave_room', { name, room });
             setLoggedIn(false);
         });
 
@@ -95,6 +97,14 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
         let handValue = getHandValue()
         socket.current.emit('hand_value', { handValue, room });
     }, [playerCards]);
+
+    useEffect(() => {
+        if (throwCards.length > 0){
+            setCanDeclare(false);
+        }else{
+            setCanDeclare(true);
+        }
+    },[throwCards]);
 
     const throwHandler = () => {
         if (sendCard === -1) {
@@ -142,13 +152,19 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     }
 
     const setThrowCard = (e) => {
+        if(getHandValue === 1){
+            window.alert("you have to declare because you only have an Ace");
+            return
+        }
         if (!myTurn){
             return
         }
         if (e.target.parentElement.id === 'throw') {
             // setSendCard(-1);
             setSendCard(-1);
-            setPlayerCards([...playerCards, throwCards.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+            const tempArr = [...throwCards]
+            setPlayerCards([...playerCards, tempArr.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+            setThrowCards(tempArr);
 
         } else {
             if (pickedOpen !== null) {
@@ -159,10 +175,14 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
             }
             if (throwCards.length === 0) {
                 setSendCard(parseInt(e.target.id.substring(10)) - 1);
-                setThrowCards([...throwCards, playerCards.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+                const tempArr = [...playerCards]
+                setThrowCards([...throwCards, tempArr.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+                setPlayerCards(tempArr)
             } else {
                 if (playerCards[parseInt((e.target.id.substring(10)) - 1)].value === throwCards[0].value) {
-                    setThrowCards([...throwCards, playerCards.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+                    const tempArr = [...playerCards]
+                    setThrowCards([...throwCards, tempArr.splice(parseInt((e.target.id.substring(10)) - 1), 1)[0]]);
+                    setPlayerCards(tempArr)
                 } else {
                     window.alert("cards don't have the same value");
                 }
@@ -230,7 +250,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
                         </div>
                         <div className="buttons">
                             <div className="button">
-                                <Button ref={nextButton} variant="contained" disabled={!(myTurn && !pick)} onClick={declareHandler} >Declare</Button>
+                                <Button ref={nextButton} variant="contained" disabled={!(myTurn && !pick && canDeclare)} onClick={declareHandler} >Declare</Button>
                             </div>
                             <div className="button">
                                 <Button variant="contained" onClick={endGame}>End game</Button>

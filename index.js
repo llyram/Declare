@@ -128,7 +128,6 @@ io.on('connection', (socket) => {
         sockets[room].opencard = sockets[room].deck.deal();
 
         io.sockets.adapter.rooms.get(room).forEach((player) => {
-            console.log(io.sockets.sockets.get(player).nickname);
             card1 = sockets[room].deck.deal()
             card2 = sockets[room].deck.deal()
             card3 = sockets[room].deck.deal()
@@ -149,7 +148,6 @@ io.on('connection', (socket) => {
     socket.on('end_game', (room) => {
         console.log("game ended");
         io.in(room).emit('end_game');
-        console.log(sockets[room]);
         delete sockets[room];
     });
 
@@ -169,7 +167,6 @@ io.on('connection', (socket) => {
             sockets[room].handValues = {}
         }
         sockets[room].handValues[socket.nickname] = handValue;
-        console.log(sockets[room]);
     })
 
     socket.on('declare', ({handValue, room}) => {

@@ -36,7 +36,7 @@
   justify-content: center;
   clear: both;
   /* width:100%; */
-  min-height: 240px;
+  min-height: 220px;
 }
 
 .throw {
@@ -53,7 +53,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100px;
+  height: 120px;
   /* background-color: white; */
   /* position: absolute; */
 
@@ -122,7 +122,7 @@ BUTTON {
   color: white;
   border-radius: 50%;
   padding: 20px;
-  margin: 20px;
+  /* margin: 20px; */
   font-size: 50px;
   font-weight: 800;
   width: 50px;
@@ -181,4 +181,13 @@ BUTTON {
 .rules div{
   overflow: auto;
   padding: 10px;
+}
+
+.profilecirclediv{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.profilecirclediv h3{
+  margin: 5px;
 }
