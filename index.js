@@ -100,6 +100,8 @@ io.on('connection', (socket) => {
     socket.on('leave_room', ({ name, room }) => {
         socket.leave(room);
         io.in(room).emit('update', `${name} has left room ${room}`);
+        io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
+        sockets[room].names.splice(sockets[room].names.indexOf(name),1);
         console.log(`${name} has left ${room}`);
     });
 

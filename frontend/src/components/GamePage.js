@@ -17,16 +17,20 @@ const GamePage = ({ socket, name, room, setLoggedIn}) => {
             setStart(true);
         })
 
-    },[socket]);
+    },[socket.current]);
 
     useEffect(() => {
         socket.current.on('update', (msg) => {
             setUpdates(updates => [...updates, msg]);
         })
-    },[socket]);
+    },[socket.current]);
 
     const startGame = () => {
         // setStart(true);
+        if (playerCount < 2){
+            window.alert("you need at least 2 players to start the game")
+            return null
+        }
         socket.current.emit('start_game', room);
     };
 

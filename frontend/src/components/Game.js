@@ -105,7 +105,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
             // setUpdates([...updates, `${name} threw ${sendCard}`]);
             setPick(true);
             for (let i = 0; i < playerCards.length; i++) {
-                if (playerCards[i].value == opencard.value) {
+                if (playerCards[i].value === opencard.value) {
                     setPickOpen(true);
                 }
             }
@@ -142,6 +142,9 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     }
 
     const setThrowCard = (e) => {
+        if (!myTurn){
+            return
+        }
         if (e.target.parentElement.id === 'throw') {
             // setSendCard(-1);
             setSendCard(-1);
