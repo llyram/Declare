@@ -1,6 +1,8 @@
 # Castelino's Card Game
 A multiplayer card game created using SocketIO, ReactJS, NodeJS and express.
 
+hosted with heroku [here](https://castelinos-card-game.herokuapp.com/).
+
 ![screenshot](https://imgur.com/HGny4KH.png)
 
 ## Rules:
