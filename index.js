@@ -67,11 +67,11 @@ const PORT = process.env.PORT || 4000
 app.use(cors());
 app.use(express.json());
 
-if (process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static('frontend/build'))
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname,  "build", "index.html"));
-      });
+        res.sendFile(path.resolve(__dirname, "build", "index.html"));
+    });
 }
 
 
@@ -85,112 +85,162 @@ io.on('connection', (socket) => {
     io.to(socket.id).emit('server_id', socket.id);
 
     socket.on('join_room', ({ room, name }) => {
-        socket.join(room);
-        socket.nickname = name;
-        if (!sockets[room]) {
-            sockets[room] = {};
-            sockets[room].names = [];
-            // sockets[room].names = {name};
+        try {
+            socket.join(room);
+            socket.nickname = name;
+            if (!sockets[room]) {
+                sockets[room] = {};
+                sockets[room].names = [];
+                // sockets[room].names = {name};
+            }
+            sockets[room].names = [...sockets[room].names, name];
+            io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
+            io.in(room).emit('update', `${name} has joined room ${room}`);
+            console.log(`${name} joind room ${room}`);
+        } catch (err) {
+            console.log(err.message);
         }
-        sockets[room].names = [...sockets[room].names, name];
-        io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
-        io.in(room).emit('update', `${name} has joined room ${room}`);
-        console.log(`${name} joind room ${room}`);
     });
 
     socket.on('leave_room', ({ name, room }) => {
-        socket.leave(room);
-        io.in(room).emit('update', `${name} has left room ${room}`);
-        io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
-        sockets[room].names.splice(sockets[room].names.indexOf(name),1);
-        console.log(`${name} has left ${room}`);
+        try {
+            socket.leave(room);
+            io.in(room).emit('update', `${name} has left room ${room}`);
+            io.in(room).emit('player_count', io.sockets.adapter.rooms.get(room).size);
+            sockets[room].names.splice(sockets[room].names.indexOf(name), 1);
+            console.log(`${name} has left ${room}`);
+
+        } catch (error) {
+            console.log(error.message)
+        }
+
     });
 
     socket.on('update', ({ update, room }) => {
-        io.in(room).emit('update', update);
+        try {
+            io.in(room).emit('update', update);
+
+        } catch (error) {
+            console.log(error.message);
+        }
     })
 
     socket.on('click', ({ name, room, send }) => {
-        io.in(room).emit('update', `${name} threw ${send}`);
-        sockets[room].opencard = send;
-        io.in(room).emit('open_card', sockets[room].opencard);
+        try {
+            io.in(room).emit('update', `${name} threw ${send}`);
+            sockets[room].opencard = send;
+            io.in(room).emit('open_card', sockets[room].opencard);
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     });
     let current_room;
 
     socket.on('start_game', (room) => {
-        io.in(room).emit('start_game', null);
-        sockets[room].deck = new Deck();
-        if (sockets[room].deck.length() < 7) {
-            sockets[room].deck.reset();
-            sockets[room].deck.shuffle();
+        try {
+            io.in(room).emit('start_game', null);
+            sockets[room].deck = new Deck();
+            if (sockets[room].deck.length() < 7) {
+                sockets[room].deck.reset();
+                sockets[room].deck.shuffle();
+            }
+            // sockets[room].handvalues = {}
+    
+            sockets[room].opencard = sockets[room].deck.deal();
+    
+            io.sockets.adapter.rooms.get(room).forEach((player) => {
+                card1 = sockets[room].deck.deal()
+                card2 = sockets[room].deck.deal()
+                card3 = sockets[room].deck.deal()
+                card4 = sockets[room].deck.deal()
+                card5 = sockets[room].deck.deal()
+                // sockets[room][io.sockets.sockets.get(player).nickname] = cardValues[card1] + cardValues[card2] + cardValues[card3] + cardValues[card4] + cardValues[card5];
+                let opencard = sockets[room].opencard
+                let cards = [card1, card2, card3, card4, card5]
+                let playerNames = sockets[room].names
+                io.to(player).emit('start_variables', { opencard, cards, playerNames });
+            });
+            // io.in(room).emit('players', sockets[room].names);
+            current_room = Array.from(io.sockets.adapter.rooms.get(room));
+            sockets[room]._turn = 0;
+            io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[0]).nickname);
+            
+        } catch (error) {
+            console.log(error.message);
         }
-        // sockets[room].handvalues = {}
-
-        sockets[room].opencard = sockets[room].deck.deal();
-
-        io.sockets.adapter.rooms.get(room).forEach((player) => {
-            card1 = sockets[room].deck.deal()
-            card2 = sockets[room].deck.deal()
-            card3 = sockets[room].deck.deal()
-            card4 = sockets[room].deck.deal()
-            card5 = sockets[room].deck.deal()
-            // sockets[room][io.sockets.sockets.get(player).nickname] = cardValues[card1] + cardValues[card2] + cardValues[card3] + cardValues[card4] + cardValues[card5];
-            let opencard = sockets[room].opencard
-            let cards = [card1, card2, card3, card4, card5]
-            let playerNames = sockets[room].names
-            io.to(player).emit('start_variables', { opencard, cards, playerNames });
-        });
-        // io.in(room).emit('players', sockets[room].names);
-        current_room = Array.from(io.sockets.adapter.rooms.get(room));
-        sockets[room]._turn = 0;
-        io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[0]).nickname);
     });
 
     socket.on('end_game', (room) => {
-        console.log("game ended");
-        io.in(room).emit('end_game');
-        delete sockets[room];
+        try {
+            console.log("game ended");
+            io.in(room).emit('end_game');
+            delete sockets[room];
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     });
 
     socket.on('turn_over', ({ room, pickedOption }) => {
-        if (pickedOption === "deck") {
-            io.to(socket.id).emit('picked_card', sockets[room].deck.deal());
-        } else {
-            io.to(socket.id).emit('picked_card', sockets[room].opencard);
+        try {
+            if (pickedOption === "deck") {
+                io.to(socket.id).emit('picked_card', sockets[room].deck.deal());
+            } else {
+                io.to(socket.id).emit('picked_card', sockets[room].opencard);
+            }
+            sockets[room]._turn = (sockets[room]._turn + 1) % io.sockets.adapter.rooms.get(room).size;
+            current_room = Array.from(io.sockets.adapter.rooms.get(room));
+            io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[sockets[room]._turn]).nickname);
+            
+        } catch (error) {
+            console.log(error.message);
         }
-        sockets[room]._turn = (sockets[room]._turn + 1) % io.sockets.adapter.rooms.get(room).size;
-        current_room = Array.from(io.sockets.adapter.rooms.get(room));
-        io.in(room).emit('your_turn', io.sockets.sockets.get(current_room[sockets[room]._turn]).nickname);
     });
 
-    socket.on('hand_value', ({handValue, room}) => {
-        if(!sockets[room].handValues){
-            sockets[room].handValues = {}
+    socket.on('hand_value', ({ handValue, room }) => {
+        try {
+            if (!sockets[room].handValues) {
+                sockets[room].handValues = {}
+            }
+            sockets[room].handValues[socket.nickname] = handValue;
+            
+        } catch (error) {
+            console.log(error.message);
         }
-        sockets[room].handValues[socket.nickname] = handValue;
     })
 
-    socket.on('declare', ({handValue, room}) => {
-        let caught = false;
-        for(const [name, value] of Object.entries(sockets[room].handValues)) {
-            if(name === socket.nickname){
-                continue
+    socket.on('declare', ({ handValue, room }) => {
+        try {
+            let caught = false;
+            for (const [name, value] of Object.entries(sockets[room].handValues)) {
+                if (name === socket.nickname) {
+                    continue
+                }
+                if (value <= handValue) {
+                    caught = true;
+                }
             }
-            if(value <= handValue){
-                caught = true;
+            if (caught) {
+                socket.to(room).emit('declare_result', `${socket.nickname} has declared and has been caught`);
+                io.to(socket.id).emit('declare_result', `your have declared and have been caught`);
+            } else {
+                socket.to(room).emit('declare_result', `${socket.nickname} has declared and has won this round`);
+                io.to(socket.id).emit('declare_result', `your have declared and have won this round`);
             }
-        }
-        if (caught){
-            socket.to(room).emit('declare_result', `${socket.nickname} has declared and has been caught`);
-            io.to(socket.id).emit('declare_result', `your have declared and have been caught`);
-        }else{
-            socket.to(room).emit('declare_result', `${socket.nickname} has declared and has won this round`);
-            io.to(socket.id).emit('declare_result', `your have declared and have won this round`);
+            
+        } catch (error) {
+            console.log(error.message);
         }
     })
 
     socket.on('disconnect', (socket) => {
-        console.log(`${socket.nickname} has disconnected`);
-        io.emit('update', "a user has disconnected");
+        try {
+            console.log(`${socket.nickname} has disconnected`);
+            io.emit('update', "a user has disconnected");
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     });
 })
