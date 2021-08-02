@@ -19,7 +19,9 @@ const App = () => {
   const socket = useRef();
 
   useEffect(() => {
-    socket.current = io(CONNECTION,  { transports: ['websocket'] });
+    socket.current = io(CONNECTION, { 
+      transports: ['websocket'],
+    });
   }, [socket]);
 
   return (
@@ -27,7 +29,7 @@ const App = () => {
       {
         loggedIn ?
           <GamePage
-            room = {room}
+            room={room}
             socket={socket}
             name={name}
             setLoggedIn={setLoggedIn}
@@ -37,7 +39,7 @@ const App = () => {
             setLoggedIn={setLoggedIn}
             name={name}
             setName={setName}
-            room = {room}
+            room={room}
             setRoom={setRoom}
           />}
 

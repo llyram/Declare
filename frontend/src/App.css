@@ -30,10 +30,23 @@
   color: #212121;
 }
 
-#board, #playerCards {
+#cards {
+  min-width: 820px;
+}
+
+#board {
   display: flex;
   align-items: center;
   justify-content: center;
+  clear: both;
+  /* width:100%; */
+  min-height: 220px;
+}
+
+#playerCards {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   clear: both;
   /* width:100%; */
   min-height: 220px;
@@ -106,9 +119,21 @@ BUTTON {
   width: 300px;
   background-color: white;
   margin: 20px;
+  /* overflow: auto; */
+  border-radius: 20px;
+  border: 10px solid white;
+  box-shadow: 0 0 0 10px hsl(236, 69%, 28%)
+}
+
+.updates h2{
+  text-align: center;
+  font-size: 30px;
+  margin: 10px;
+}
+
+.list {
+  height: 320px;
   overflow: auto;
-  border-radius: 5px;
-  border: 5px solid white;
 }
 
 .abutton {
@@ -117,7 +142,7 @@ BUTTON {
 }
 
 .profilecircle {
-  border: 3px solid #282828;
+  border: 5px solid #282828;
   background-color: #282a36;
   color: white;
   border-radius: 50%;
@@ -135,7 +160,7 @@ BUTTON {
 
 .currentturn {
   box-shadow: 0px 0px 20px 5 green;
-  border: 3px solid green;
+  border: 5px solid green;
 
 }
 

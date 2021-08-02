@@ -99,20 +99,19 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     }, [playerCards]);
 
     useEffect(() => {
-        if (throwCards.length > 0){
+        if (throwCards.length > 0) {
             setCanDeclare(false);
-        }else{
+        } else {
             setCanDeclare(true);
         }
-    },[throwCards]);
+    }, [throwCards]);
 
     const throwHandler = () => {
         if (sendCard === -1) {
             alert("choose a card to throw");
         } else {
             let update = `${name} threw ${throwCards[0].card}`
-            socket.current.emit('update', { update, room });
-            // setUpdates([...updates, `${name} threw ${sendCard}`]);
+            // socket.current.emit('update', { update, room });
             setPick(true);
             for (let i = 0; i < playerCards.length; i++) {
                 if (playerCards[i].value === opencard.value) {
@@ -152,11 +151,12 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     }
 
     const setThrowCard = (e) => {
-        if(getHandValue === 1){
-            window.alert("you have to declare because you only have an Ace");
+
+        if (!myTurn) {
             return
         }
-        if (!myTurn){
+        if (getHandValue() === 1) {
+            window.alert("you have to declare because you only have an Ace");
             return
         }
         if (e.target.parentElement.id === 'throw') {
@@ -259,11 +259,14 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
                     </div>
                 </div>
                 <div className="updates">
-                    <ul>
-                        {updates.map((update, index) => (
-                            <li key={index}>{update}</li>
-                        ))}
-                    </ul>
+                    <h2>Updates</h2>
+                    <div className="list">
+                        <ul>
+                            {updates.map((update, index) => (
+                                <li key={index}>{update}</li>
+                            ))}
+                        </ul>
+                    </div>
 
                 </div>
             </div>

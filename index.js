@@ -3,12 +3,13 @@ const app = express();
 const cors = require('cors');
 const server = require('http').createServer(app);
 const ws = require('ws');
+
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     },
-    wsEngine: ws.Server
+    wsEngine: ws.Server,
 });
 
 class Deck {
@@ -66,12 +67,12 @@ const PORT = process.env.PORT || 4000
 app.use(cors());
 app.use(express.json());
 
-// if (process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production'){
     app.use(express.static('frontend/build'))
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname,  "build", "index.html"));
       });
-// }
+}
 
 
 server.listen(PORT, () => {
@@ -110,7 +111,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('click', ({ name, room, send }) => {
-        socket.broadcast.emit('update', `${name} threw ${send}`);
+        io.in(room).emit('update', `${name} threw ${send}`);
         sockets[room].opencard = send;
         io.in(room).emit('open_card', sockets[room].opencard);
     });
