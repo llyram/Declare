@@ -52,8 +52,8 @@ const GamePage = ({ socket, name, room, setLoggedIn}) => {
                 (
                     <div className="gameclass">
                         <div className="login">
-                            <h2>joined room <span style={{ color: 'blue' }} >{room}</span> </h2>
-                            <h2>there are currently {playerCount} players in this room</h2>
+                            <h2>You have joined room <span style={{ color: 'blue' }} >{room}</span> </h2>
+                            <h2>there are currently {playerCount} player(s) in this room</h2>
                             <h1>Start the game?</h1>
                             <div className="actions">
                                 <div className="button">

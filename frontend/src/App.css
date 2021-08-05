@@ -6,7 +6,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Open Sans';
 }
+
 
 .login {
   background-color: white;
@@ -122,13 +124,19 @@ BUTTON {
   /* overflow: auto; */
   border-radius: 20px;
   border: 10px solid white;
-  box-shadow: 0 0 0 10px hsl(236, 69%, 28%)
+  /* box-shadow: 0 0 0 10px hsl(236, 69%, 28%) */
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
+
 }
 
 .updates h2{
   text-align: center;
   font-size: 30px;
   margin: 10px;
+}
+
+ul {
+  list-style-type: square;
 }
 
 .list {
@@ -197,7 +205,7 @@ BUTTON {
   padding: 20px;
   width: 500px;
   /* overflow: auto; */
-  height: 400px;
+  height: 500px;
   border-radius: 10px;
   margin: 20px;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
@@ -206,6 +214,14 @@ BUTTON {
 .rules div{
   overflow: auto;
   padding: 10px;
+  /* font-family: 'Open Sans'; */
+  color: #212121;
+  font-weight: 600;
+}
+
+.rules h1{
+  margin: 0;
+  font-size: 45px;
 }
 
 .profilecirclediv{
@@ -215,4 +231,24 @@ BUTTON {
 
 .profilecirclediv h3{
   margin: 5px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
