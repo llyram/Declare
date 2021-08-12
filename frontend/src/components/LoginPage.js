@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Paper } from '@material-ui/core';
 
 
 const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
@@ -22,7 +22,7 @@ const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
     return (
         <div className="flex-centered">
             <div className="login">
-                <h1>Castelino's Card game</h1>
+                <h1>Castelino's Card Game</h1>
                 <TextField
                     value={name}
                     onChange={nameChangeHandler}
@@ -45,6 +45,7 @@ const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
             </div>
 
             <div className="rules flex-centered-column">
+
                 <h1>Rules</h1>
                 <div>
                 <ol>

@@ -9,6 +9,7 @@ const GamePage = ({ socket, name, room, setLoggedIn}) => {
     const [playerCount, setPlayerCount] = useState(0);
     const [updates, setUpdates] = useState([]);
 
+
     useState(() => {
         socket.current.on('player_count', (count) => {
             setPlayerCount(count);
@@ -26,12 +27,12 @@ const GamePage = ({ socket, name, room, setLoggedIn}) => {
     },[socket.current]);
 
     const startGame = () => {
-        // setStart(true);
         if (playerCount < 2){
             window.alert("you need at least 2 players to start the game")
             return null
         }
         socket.current.emit('start_game', room);
+        console.log("start game");
     };
 
     const leaveRoom = () => {

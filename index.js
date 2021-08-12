@@ -125,9 +125,9 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('click', ({ name, room, send }) => {
+    socket.on('click', ({ name, room, send, length }) => {
         try {
-            io.in(room).emit('update', `${name} threw ${send}`);
+            io.in(room).emit('update', {name, send, length});
             sockets[room].opencard = send;
             io.in(room).emit('open_card', sockets[room].opencard);
             

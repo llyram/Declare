@@ -16,10 +16,21 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* height: 50vh; */
-  /* width: 80vh; */
+  /* height: 500px; */
+  margin: 20px;
   padding: 40px;
   border-radius: 10px;
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
+}
+
+.rules{
+  background-color: white;
+  padding: 20px;
+  width: 500px;
+  /* overflow: auto; */
+  height: 500px;
+  border-radius: 10px;
+  margin: 20px;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
 }
 
@@ -117,12 +128,12 @@ BUTTON {
 }
 
 .updates {
-  height: 400px;
+  height: 375px;
   width: 300px;
   background-color: white;
   margin: 20px;
   /* overflow: auto; */
-  border-radius: 20px;
+  border-radius: 10px;
   border: 10px solid white;
   /* box-shadow: 0 0 0 10px hsl(236, 69%, 28%) */
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
@@ -200,16 +211,7 @@ ul {
   align-items: center;
 }
 
-.rules{
-  background-color: white;
-  padding: 20px;
-  width: 500px;
-  /* overflow: auto; */
-  height: 500px;
-  border-radius: 10px;
-  margin: 20px;
-  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
-}
+
 
 .rules div{
   overflow: auto;

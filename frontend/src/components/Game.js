@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
+
 
 import ProfileCircle from './ProfileCircle';
 
@@ -15,6 +17,8 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     const [pickOpen, setPickOpen] = useState(false);
     const [pickedOpen, setPickedOpen] = useState(null);
     const [canDeclare, setCanDeclare] = useState(true);
+    const [colors, setColors] = useState(["#6272a4", "#50fa7b", "#ffb86c", "#ff79c6", "#ff5555"]);
+
 
 
     class Card {
@@ -60,8 +64,8 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
         });
 
         // Updates after any move
-        socket.current.on('update', (msg) => {
-            setUpdates(updates => [...updates, msg]);
+        socket.current.on('update', ({name, send, length}) => {
+            setUpdates(updates => [...updates, `${name} threw ${send}(${length})`]);
         })
 
         // change of turn
@@ -133,7 +137,8 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
         }
 
         socket.current.emit('turn_over', { room, pickedOption });
-        socket.current.emit('click', { name, room, send });
+        let length = throwCards.length;
+        socket.current.emit('click', { name, room, send, length});
     }
 
     const declareHandler = () => {
@@ -201,9 +206,12 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
         <div className="game">
             <div className="players">
                 {players.map((player) => (
+                    // <Avatar className={classes.orange}>{player.substring(0, 1).toUpperCase()}</Avatar>
                     <ProfileCircle
                         name={player}
-                        currentName={currentTurn} />
+                        currentName={currentTurn}
+                        color={grey[900]}
+                    />
                 ))}
             </div>
             <div className="gameclass">
