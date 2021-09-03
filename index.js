@@ -154,10 +154,17 @@ io.on("connection", (socket) => {
   socket.on("leave_room", ({ name, room }) => {
     try {
       socket.leave(room);
-      io.in(room).emit("update", `${name} has left room ${room}`);
-      io.in(room).emit("player_count", io.sockets.adapter.rooms.get(room).size);
-      sockets[room].names.splice(sockets[room].names.indexOf(name), 1);
-      console.log(`${name} has left ${room}`);
+      delete socket.room;
+      delete socket.nickname;
+      if (sockets[room]) {
+        io.in(room).emit("update", `${name} has left room ${room}`);
+        io.in(room).emit(
+          "player_count",
+          io.sockets.adapter.rooms.get(room).size
+        );
+        sockets[room].names.splice(sockets[room].names.indexOf(name), 1);
+        console.log(`${name} has left ${room}`);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -300,7 +307,11 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     try {
-      console.log(`${socket.nickname} has disconnected`);
+      console.log(`${socket.id} has disconnected`);
+      if (!socket.room) {
+        return
+      }
+      console.log(sockets[socket.room].start);
       if (sockets[socket.room].start) {
         io.in(socket.room).emit(
           "end_game",
@@ -308,8 +319,13 @@ io.on("connection", (socket) => {
         );
         delete sockets[socket.room];
       } else {
-        io.in(socket.room).emit("player_count", io.sockets.adapter.rooms.get(socket.room).size);
-        sockets[socket.room].names.splice(sockets[socket.room].names.indexOf(socket.nickname));
+        io.in(socket.room).emit(
+          "player_count",
+          io.sockets.adapter.rooms.get(socket.room).size
+        );
+        sockets[socket.room].names.splice(
+          sockets[socket.room].names.indexOf(socket.nickname)
+        );
         io.emit("update", `${socket.nickname} has left`);
       }
     } catch (error) {
