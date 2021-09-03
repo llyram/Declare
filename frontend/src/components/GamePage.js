@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useBeforeunload } from "react-beforeunload";
 import { Button } from "@material-ui/core";
 import Game from "./Game";
 
@@ -8,9 +7,6 @@ const GamePage = ({ socket, name, room, setLoggedIn }) => {
   const [playerCount, setPlayerCount] = useState(0);
   const [updates, setUpdates] = useState([]);
 
-  useBeforeunload((event) => {
-    event.preventDefault();
-  });
 
   useState(() => {
     socket.current.on("player_count", (count) => {
