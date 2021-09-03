@@ -21,7 +21,7 @@ const LoginPage = ({ socket, setLoggedIn, name, setName, room, setRoom }) => {
 
     return (
         <div className="flex-centered">
-            <div className="login">
+            <div className="login flex-centered-column">
                 <h1>Castelino's Card Game</h1>
                 <TextField
                     value={name}

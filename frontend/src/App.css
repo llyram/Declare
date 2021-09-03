@@ -3,19 +3,12 @@
   height: 100vh;
   min-height: 650px;
   min-width: 1350px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: 'Open Sans';
 }
 
 
 .login {
   background-color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   /* height: 500px; */
   margin: 20px;
   padding: 40px;
@@ -48,18 +41,10 @@
 }
 
 #board {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  clear: both;
-  /* width:100%; */
   min-height: 220px;
 }
 
 #playerCards {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
   clear: both;
   /* width:100%; */
   min-height: 220px;
@@ -75,14 +60,7 @@
 }
 
 .players {
-  /* width: 100%; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 120px;
-  /* background-color: white; */
-  /* position: absolute; */
-
 }
 
 .card {
@@ -119,12 +97,6 @@ BUTTON {
   margin:20px;
   border-radius: 5px;
   
-}
-
-.gameclass{
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .updates {
@@ -166,28 +138,16 @@ ul {
   color: white;
   border-radius: 50%;
   padding: 20px;
-  /* margin: 20px; */
   font-size: 50px;
   font-weight: 800;
   width: 50px;
   height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* box-shadow: 0px 0px 20px 5px green; */
 }
 
 .currentturn {
   box-shadow: 0px 0px 20px 5 green;
   border: 5px solid green;
 
-}
-
-.buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 
 .button {

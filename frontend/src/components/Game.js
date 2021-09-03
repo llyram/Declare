@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useBeforeunload } from 'react-beforeunload';
 import { Button } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 
@@ -19,6 +20,9 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     const [canDeclare, setCanDeclare] = useState(true);
     const [colors, setColors] = useState(["#6272a4", "#50fa7b", "#ffb86c", "#ff79c6", "#ff5555"]);
 
+    useBeforeunload((event) => {
+        event.preventDefault();
+    });
 
 
     class Card {
@@ -204,7 +208,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
 
     return (
         <div className="game">
-            <div className="players">
+            <div className="players flex-centered">
                 {players.map((player) => (
                     // <Avatar className={classes.orange}>{player.substring(0, 1).toUpperCase()}</Avatar>
                     <ProfileCircle
@@ -214,19 +218,19 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
                     />
                 ))}
             </div>
-            <div className="gameclass">
+            <div className="flex-centered">
                 <div id="cards">
                     Board:
-                    <div id="board">
-                        <div className="buttons button">
+                    <div id="board" className="flex-centered">
+                        <div className="flex-centered-column button">
                             <div id="deck" className="card"></div>
                             <Button variant="contained" onClick={() => { pickHandler("deck") }} disabled={!(myTurn && pick)}>pick from deck</Button>
                         </div>
-                        <div className="buttons button">
+                        <div className="flex-centered-column button">
                             {opencard ? <div id="opencard" className="card" style={{ backgroundPosition: opencard.backgroundPosition }}></div> : <div></div>}
                             <Button variant="contained" onClick={() => { pickHandler("opencard") }} disabled={!(myTurn && pick && pickOpen)}>pick open card</Button>
                         </div>
-                        <div className="buttons button">
+                        <div className="flex-centered-column button">
                             <div className="throw" id='throw' ref={throwing}>
                                 {throwCards.map((card, index) => (
                                     <div
@@ -244,7 +248,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
                     </div>
                     <hr />
                     Player's card:
-                    <div id="playerCards">
+                    <div id="playerCards flex-centered">
                         <div id='playercards'>
                             {playerCards.map((card, index) => (
                                 <div
@@ -256,7 +260,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
 
                             ))}
                         </div>
-                        <div className="buttons">
+                        <div className="flex-centered-column">
                             <div className="button">
                                 <Button ref={nextButton} variant="contained" disabled={!(myTurn && !pick && canDeclare)} onClick={declareHandler} >Declare</Button>
                             </div>
