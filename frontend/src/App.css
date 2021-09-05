@@ -1,15 +1,14 @@
 .App {
   background-image: radial-gradient(circle at 29% 55%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 4%,transparent 4%, transparent 44%,transparent 44%, transparent 100%),radial-gradient(circle at 85% 89%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 52%,transparent 52%, transparent 100%),radial-gradient(circle at 6% 90%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 53%,transparent 53%, transparent 64%,transparent 64%, transparent 100%),radial-gradient(circle at 35% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 6%,transparent 6%, transparent 98%,transparent 98%, transparent 100%),radial-gradient(circle at 56% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 16%,transparent 16%, transparent 23%,transparent 23%, transparent 100%),radial-gradient(circle at 42% 0%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 3%,transparent 3%, transparent 26%,transparent 26%, transparent 100%),radial-gradient(circle at 29% 28%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 75%,transparent 75%, transparent 100%),radial-gradient(circle at 77% 21%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 35%,transparent 35%, transparent 55%,transparent 55%, transparent 100%),radial-gradient(circle at 65% 91%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 46%,transparent 46%, transparent 76%,transparent 76%, transparent 100%),linear-gradient(45deg, rgb(83, 91, 235),rgb(76, 11, 174));
-  height: 100vh;
-  min-height: 650px;
-  min-width: 1350px;
+  min-height: 100vh;
+  min-width: 1300px;
   font-family: 'Open Sans';
 }
 
 
 .login {
   background-color: white;
-  /* height: 500px; */
+  height: 50vh;
   margin: 20px;
   padding: 40px;
   border-radius: 10px;
@@ -21,7 +20,7 @@
   padding: 20px;
   width: 500px;
   /* overflow: auto; */
-  height: 500px;
+  height: 80vh;
   border-radius: 10px;
   margin: 20px;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
@@ -32,7 +31,7 @@
 }
 
 .login h1{
-  font-size: 40px;
+  font-size: 6vh;
   color: #212121;
 }
 
@@ -183,7 +182,11 @@ ul {
 
 .rules h1{
   margin: 0;
-  font-size: 45px;
+  font-size: 8vh;
+}
+
+.rules ol li {
+  font-size: 3vh;
 }
 
 .profilecirclediv{
