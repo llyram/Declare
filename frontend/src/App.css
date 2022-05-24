@@ -1,42 +1,42 @@
 .App {
   background-image: radial-gradient(circle at 29% 55%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 4%,transparent 4%, transparent 44%,transparent 44%, transparent 100%),radial-gradient(circle at 85% 89%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 52%,transparent 52%, transparent 100%),radial-gradient(circle at 6% 90%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 53%,transparent 53%, transparent 64%,transparent 64%, transparent 100%),radial-gradient(circle at 35% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 6%,transparent 6%, transparent 98%,transparent 98%, transparent 100%),radial-gradient(circle at 56% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 16%,transparent 16%, transparent 23%,transparent 23%, transparent 100%),radial-gradient(circle at 42% 0%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 3%,transparent 3%, transparent 26%,transparent 26%, transparent 100%),radial-gradient(circle at 29% 28%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 75%,transparent 75%, transparent 100%),radial-gradient(circle at 77% 21%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 35%,transparent 35%, transparent 55%,transparent 55%, transparent 100%),radial-gradient(circle at 65% 91%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 46%,transparent 46%, transparent 76%,transparent 76%, transparent 100%),linear-gradient(45deg, rgb(83, 91, 235),rgb(76, 11, 174));
   min-height: 100vh;
-  min-width: 1300px;
+  /* min-width: 1300px; */
   font-family: 'Open Sans';
 }
 
 
 .login {
   background-color: white;
-  height: 50vh;
-  margin: 20px;
-  padding: 40px;
-  border-radius: 10px;
+  /* height: 50vmin; */
+  margin: 2vmin;
+  padding: 4vmin;
+  border-radius: 1vmin;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
 }
 
 .rules{
   background-color: white;
-  padding: 20px;
-  width: 500px;
+  padding: 2vmin;
+  width: 50vmin;
   /* overflow: auto; */
-  height: 80vh;
+  height: 60vmin;
   border-radius: 10px;
-  margin: 20px;
+  margin: 2vmin;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
 }
 
 .login .textfield{
-  margin: 10px;
+  margin: 1vmin;
 }
 
 .login h1{
-  font-size: 6vh;
+  font-size: 6vmin;
   color: #212121;
 }
 
 #cards {
-  min-width: 820px;
+  min-width: 82vmin;
 }
 
 #board {
@@ -64,8 +64,8 @@
 
 .card {
   box-sizing: border-box;  
-  width: 100px;
-  height: 140px;
+  width: 10vmin;
+  height: 14vmin;
   margin:10px;
   float: left;  
   background-color: white;
@@ -99,8 +99,8 @@ BUTTON {
 }
 
 .updates {
-  height: 375px;
-  width: 300px;
+  height: 40vmin;
+  width: 50vmin;
   background-color: white;
   margin: 20px;
   /* overflow: auto; */
@@ -108,12 +108,12 @@ BUTTON {
   border: 10px solid white;
   /* box-shadow: 0 0 0 10px hsl(236, 69%, 28%) */
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
-
+  font-size: 2vmin;
 }
 
 .updates h2{
   text-align: center;
-  font-size: 30px;
+  font-size: 5vmin;
   margin: 10px;
 }
 
@@ -174,7 +174,7 @@ ul {
 
 .rules div{
   overflow: auto;
-  padding: 10px;
+  padding: 1vmin;
   /* font-family: 'Open Sans'; */
   color: #212121;
   font-weight: 600;
@@ -182,11 +182,16 @@ ul {
 
 .rules h1{
   margin: 0;
-  font-size: 8vh;
+  font-size: 8vmin;
+}
+
+.rules ol {
+  padding: 1.5vmin;
+  margin: 0.5vmin;
 }
 
 .rules ol li {
-  font-size: 3vh;
+  font-size: 2vmin;
 }
 
 .profilecirclediv{
