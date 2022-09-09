@@ -18,7 +18,7 @@
   <p align="center">
     A realtime multiplayer card game
     <br />
-    <a href="https://declare-production.up.railway.app/">View Demo</a>
+    <a href="https://declare-production.up.railway.app/" target="_blank">View Demo</a>
     ·
     <a href="https://github.com/Maryll-castelino/Declare/issues">Report Bug</a>
     ·
