@@ -91,6 +91,9 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
     } //End of Constructor
   } //End of Card class
 
+  // Set card size limit to prevent overscaling
+  const styleCardSize = { maxHeight: '150px', maxWidth: '105px' }
+
   const [opencard, setOpencard] = useState();
   const [playerCards, setPlayerCards] = useState([]);
   const [throwCards, setThrowCards] = useState([]);
@@ -282,7 +285,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
           Board:
           <div id="board" className="flex-centered">
             <div className="flex-centered-column button">
-              <div id="deck" className="card"></div>
+              <div id="deck" className="card" style={ styleCardSize }></div>
               <Button
                 variant="contained"
                 onClick={() => {
@@ -298,7 +301,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
                 <div
                   id="opencard"
                   className="card"
-                  style={{ backgroundPosition: opencard.backgroundPosition }}
+                  style={{ backgroundPosition: opencard.backgroundPosition, ...styleCardSize }}
                 ></div>
               ) : (
                 <div></div>
@@ -314,13 +317,13 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
               </Button>
             </div>
             <div className="flex-centered-column button">
-              <div className="throw" id="throw" ref={throwing}>
+              <div className="throw" id="throw" ref={throwing} style={{ height: '100%' }}>
                 {throwCards.map((card, index) => (
                   <div
                     id={"playerCard".concat((index + 1).toString())}
                     className="card"
                     onClick={setThrowCard}
-                    style={{ backgroundPosition: card.backgroundPosition }}
+                    style={{ backgroundPosition: card.backgroundPosition, ...styleCardSize }}
                   ></div>
                 ))}
               </div>
@@ -342,7 +345,7 @@ const Game = ({ socket, name, room, setLoggedIn }) => {
                   id={"playerCard".concat((index + 1).toString())}
                   className="card"
                   onClick={setThrowCard}
-                  style={{ backgroundPosition: card.backgroundPosition }}
+                  style={{ backgroundPosition: card.backgroundPosition, ...styleCardSize }}
                 ></div>
               ))}
             </div>
