@@ -94,9 +94,10 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    node index.js
    ```
-4. Move to the frontend directory and start the React frontend:
+4. Move to the frontend directory, install NPM packages and start the React frontend:
    ```sh
    cd frontend
+   npm install
    npm start
    ```
 
