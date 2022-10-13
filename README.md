@@ -1,4 +1,4 @@
-<div id="top"></div>
+<h1><div id="top"></div></h1>
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/Maryll-castelino/Declare">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -82,11 +82,11 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
-1. Clone the repo:
+1. Clone the repository:
    ```sh
    git clone https://github.com/Maryll-castelino/Declare.git
    ```
-2. Install NPM packages:
+2. Install npm packages:
    ```sh
    npm install
    ```
@@ -94,7 +94,7 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    node index.js
    ```
-4. Move to the frontend directory, install NPM packages and start the React frontend:
+4. Move to the frontend directory, install npm packages and start the React frontend:
    ```sh
    cd frontend
    npm install
@@ -122,7 +122,7 @@ To get a local copy up and running follow these simple example steps.
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repository and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
