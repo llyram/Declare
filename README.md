@@ -84,7 +84,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo:
    ```sh
-   git clone https://github.com/Maryll-castelino/.git
+   git clone https://github.com/Maryll-castelino/Declare.git
    ```
 2. Install NPM packages:
    ```sh
