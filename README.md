@@ -18,7 +18,7 @@
   <p align="center">
     A realtime multiplayer card game
     <br />
-    <a href="https://declare-production.up.railway.app/" target="_blank">View Demo</a>
+    <a href="https://declare-production.up.railway.app/">View Demo</a>
     ·
     <a href="https://github.com/Maryll-castelino/Declare/issues">Report Bug</a>
     ·
@@ -55,7 +55,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://castelinos-card-game.herokuapp.com/)
+![Product Name Screen Shot][product-screenshot]
 
 This is a realtime multiplayer card game. Players can create or join *rooms* to play with other players. see the [rules](#rules) section to see the rules
 
@@ -158,3 +158,4 @@ Project Link: [https://github.com/Maryll-castelino/Declare](https://github.com/M
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/maryll-castelino-364085192/
 [product-screenshot]: images/screenshot.png
+[deploy-url]: https://declare-production.up.railway.app/
