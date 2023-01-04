@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/Maryll-castelino/Declare">
+  <a href="https://github.com/llyram/Declare">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -18,11 +18,11 @@
   <p align="center">
     A realtime multiplayer card game
     <br />
-    <a href="https://declare-production.up.railway.app/">View Demo</a>
+    <a href="https://declare.ga">View Demo</a>
     ·
-    <a href="https://github.com/Maryll-castelino/Declare/issues">Report Bug</a>
+    <a href="https://github.com/llyram/Declare/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Maryll-castelino/Declare/issues">Request Feature</a>
+    <a href="https://github.com/llyram/Declare/issues">Request Feature</a>
   </p>
 </div>
 
@@ -84,7 +84,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/Maryll-castelino/Declare.git
+   git clone https://github.com/llyram/Declare.git
    ```
 2. Install npm packages:
    ```sh
@@ -140,21 +140,21 @@ Don't forget to give the project a star! Thanks again!
 
 Maryll Castelino - [@maryllcastelino](https://twitter.com/@maryllcastelino) - maryllcastelino@gmail.com
 
-Project Link: [https://github.com/Maryll-castelino/Declare](https://github.com/Maryll-castelino/Declare)
+Project Link: [https://github.com/llyram/Declare](https://github.com/llyram/Declare)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/Maryll-castelino/Declare.svg?style=for-the-badge
-[contributors-url]: https://github.com/Maryll-castelino/Declare/contributors
-[forks-shield]: https://img.shields.io/github/forks/Maryll-castelino/Declare.svg?style=for-the-badge
-[forks-url]: https://github.com/Maryll-castelino/Declare/network/members
-[stars-shield]: https://img.shields.io/github/stars/Maryll-castelino/Declare.svg?style=for-the-badge
-[stars-url]: https://github.com/Maryll-castelino/Declare/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Maryll-castelino/Declare.svg?style=for-the-badge
-[issues-url]: https://github.com/Maryll-castelino/Declare/issues
+[contributors-shield]: https://img.shields.io/github/contributors/llyram/Declare.svg?style=for-the-badge
+[contributors-url]: https://github.com/llyram/Declare/contributors
+[forks-shield]: https://img.shields.io/github/forks/llyram/Declare.svg?style=for-the-badge
+[forks-url]: https://github.com/llyram/Declare/network/members
+[stars-shield]: https://img.shields.io/github/stars/llyram/Declare.svg?style=for-the-badge
+[stars-url]: https://github.com/llyram/Declare/stargazers
+[issues-shield]: https://img.shields.io/github/issues/llyram/Declare.svg?style=for-the-badge
+[issues-url]: https://github.com/llyram/Declare/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/maryll-castelino-364085192/
 [product-screenshot]: images/screenshot.png
